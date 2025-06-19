@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[redirects]
+  / = /index.html
+  /index.html = /index.html
+  /about = /about/index.html
+  /about/index.html = /about/index.html
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    "Cache-Control" = "public, max-age=0, must-revalidate"
+    "X-Frame-Options" = "DENY"
+    "X-Content-Type-Options" = "nosniff"
+    "X-XSS-Protection" = "1; mode=block"
