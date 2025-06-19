@@ -5,11 +5,15 @@
 [build.environment]
   NODE_VERSION = "18"
 
-[redirects]
-  / = /index.html
-  /index.html = /index.html
-  /about = /about/index.html
-  /about/index.html = /about/index.html
+[[redirects]]
+  from = "/about"
+  to = "/about/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [[headers]]
   for = "/*"
