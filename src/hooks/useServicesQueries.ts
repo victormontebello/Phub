@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient, UseMutationOptions } from '@tans
 import { getServices, addToFavorites, removeFromFavorites, getUserFavorites } from '../lib/database';
 import { supabase } from '../lib/supabase';
 
-export const useServices = (filters: { service?: string; search?: string }) => {
+export const useServices = (filters: { category?: string; search?: string }) => {
   return useQuery({
     queryKey: ['services', filters],
     queryFn: async () => {
