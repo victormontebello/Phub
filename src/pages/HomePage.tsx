@@ -15,7 +15,7 @@ export const HomePage: React.FC = () => {
     {
       icon: Shield,
       title: 'Seguro & Verificado',
-      description: 'Todos os vendedores são verificados e os pets são checados para sua tranquilidade.'
+      description: 'Todos os doadores são verificados e os pets são checados para sua tranquilidade.'
     },
     {
       icon: Users,
@@ -37,10 +37,10 @@ export const HomePage: React.FC = () => {
   ];
 
   const services = [
-    { name: 'Pet Grooming', providers: '200+', icon: ShoppingBag },
-    { name: 'Pet Sitting', providers: '150+', icon: Heart },
-    { name: 'Veterinary', providers: '80+', icon: Stethoscope },
-    { name: 'Training', providers: '120+', icon: Star }
+    { name: 'Banho e Tosa', providers: '200+', icon: ShoppingBag },
+    { name: 'Adoção', providers: '150+', icon: Heart },
+    { name: 'Veterinário', providers: '80+', icon: Stethoscope },
+    { name: 'Treinamento', providers: '120+', icon: Star },
   ];
 
   const categoryMap: Record<string, string> = {
@@ -58,7 +58,7 @@ export const HomePage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="animate-slide-up">
               <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                Encontre Seu Amigo Pet
+                Encontre Seu Amigo
                 <span className="text-primary-600 block">Pet</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
