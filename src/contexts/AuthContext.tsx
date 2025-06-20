@@ -27,14 +27,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setSession(session ?? null);
       setLoading(false);
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
@@ -80,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           user_type: userType,
           cvi: userType === 'veterinarian' ? cvi : null,
         },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${import.meta.env.VITE_APP_URL}/auth/callback`,
       },
     });
 
