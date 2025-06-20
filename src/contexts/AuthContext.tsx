@@ -68,6 +68,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, name: string, phone: string, userType: string, cvi: string) => {
+    const baseUrl = import.meta.env.VITE_APP_URL?.replace(/\/$/, '') || '';
+    const redirectUrl = `${baseUrl}/auth/callback`;
+    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -78,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           user_type: userType,
           cvi: userType === 'veterinarian' ? cvi : null,
         },
-        emailRedirectTo: `${import.meta.env.VITE_APP_URL}/auth/callback`,
+        emailRedirectTo: redirectUrl,
       },
     });
 
