@@ -27,7 +27,12 @@ export const Header: React.FC = () => {
               <div className="bg-primary-500 p-2 rounded-lg group-hover:bg-primary-600 transition-colors">
                 <Heart className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">PetHub</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-xl font-bold text-gray-900">PetHub</span>
+                <span className="bg-gradient-to-r from-orange-400 to-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
+                  BETA
+                </span>
+              </div>
             </Link>
           </div>
 
