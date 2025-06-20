@@ -20,4 +20,5 @@ export const MESSAGES = {
   SUCCESS_PROFILE_UPDATE: 'Perfil atualizado com sucesso!',
   SUCCESS_ADD_PET: 'Pet adicionado com sucesso!',
   SUCCESS_ADD_SERVICE: 'Serviço adicionado com sucesso!',
+  ERROR_MISSING_PET_IMAGE: 'Por favor, adicione uma imagem do seu pet!',
 }; 

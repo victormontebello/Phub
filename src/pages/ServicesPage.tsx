@@ -8,13 +8,12 @@ import {
   removeFromFavoritesHook
 } from '../hooks/useServicesQueries';
 import { ContactCard } from '../components/ContactCard';
-import { supabase } from '../lib/supabase';
 
 export const ServicesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedService, setSelectedService] = useState('all');
   const [showContactModal, setShowContactModal] = useState(false);
-  const [contactInfo, setContactInfo] = useState<any | null>(null);
+  const [selectedProviderId, setSelectedProviderId] = useState<string | null>(null);
 
   const serviceTypes = [
     { id: 'all', name: 'Todos os Serviços' },
@@ -82,22 +81,9 @@ export const ServicesPage: React.FC = () => {
       : await addToFavoritesMutation.mutateAsync({ itemId: serviceId, itemType: 'service' });
   };
 
-  const handleShowContact = async (providerId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('full_name, email, phone')
-        .eq('id', providerId)
-        .single();
-      if (error) {
-        console.error('Erro ao buscar contato:', error);
-        return;
-      }
-      setContactInfo(data);
-      setShowContactModal(true);
-    } catch (err) {
-      console.error('Erro ao buscar contato:', err);
-    }
+  const handleShowContact = (providerId: string) => {
+    setSelectedProviderId(providerId);
+    setShowContactModal(true);
   };
 
   if (isLoading) {
@@ -261,7 +247,10 @@ export const ServicesPage: React.FC = () => {
 
                         {/* Actions */}
                         <div className="flex space-x-3">
-                          <button className="flex-1 bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors font-medium" onClick={() => handleShowContact(service.provider_id)}>
+                          <button 
+                            className="flex-1 bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors font-medium" 
+                            onClick={() => handleShowContact(service.provider_id)}
+                          >
                             Contato Fornecedor
                           </button>
                           <button 
@@ -293,8 +282,8 @@ export const ServicesPage: React.FC = () => {
           </div>
         )}
 
-        {showContactModal && contactInfo && (
-          <ContactCard contactInfo={contactInfo} onClose={() => setShowContactModal(false)} />
+        {showContactModal && selectedProviderId && (
+          <ContactCard sellerId={selectedProviderId} onClose={() => setShowContactModal(false)} />
         )}
       </div>
     </div>

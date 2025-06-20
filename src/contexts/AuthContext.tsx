@@ -6,8 +6,9 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string, phone: string) => Promise<boolean>;
+  signUp: (email: string, password: string, name: string, phone: string, userType: string, cvi: string) => Promise<boolean>;
   signOut: () => Promise<void>;
+  verifyEmail: (token: string, type: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -64,10 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       password,
     });
+
     if (error) throw error;
   };
 
-  const signUp = async (email: string, password: string, name: string, phone: string) => {
+  const signUp = async (email: string, password: string, name: string, phone: string, userType: string, cvi: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -75,7 +77,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         data: {
           full_name: name,
           phone: phone,
+          user_type: userType,
+          cvi: userType === 'veterinarian' ? cvi : null,
         },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -87,6 +92,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       full_name: name,
       phone: phone,
       avatar_url: '',
+      user_type: userType,
+      cvi: userType === 'veterinarian' ? cvi : null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     });
@@ -94,6 +101,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (dbError) throw dbError;
 
     return true;
+  };
+
+  const verifyEmail = async (token: string, type: string) => {
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: token,
+      type: type as any,
+    });
+
+    if (error) throw error;
   };
 
   const signOut = async () => {
@@ -107,6 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signIn,
     signUp,
     signOut,
+    verifyEmail,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -9,6 +9,7 @@ import { ProductsPage } from './pages/ProductsPage';
 import { CartProvider } from './contexts/CartContext';
 import { CartPage } from './pages/CartPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { AuthCallbackPage } from './pages/AuthCallbackPage';
 
 const HomePage = lazy(() => import('./pages/HomePage').then(module => ({ default: module.HomePage })));
 const PetsPage = lazy(() => import('./pages/PetsPage').then(module => ({ default: module.PetsPage })));
@@ -56,6 +57,7 @@ function App() {
                       <Route path="/services" element={<ServicesPage />} />
                       <Route path="/products" element={<ProductsPage />} />
                       <Route path="/auth" element={<AuthPage />} />
+                      <Route path="/auth/callback" element={<AuthCallbackPage />} />
                       <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
                       <Route path="/create-listing" element={<PrivateRoute><CreateListingPage /></PrivateRoute>} />
                       <Route path="/cart" element={<PrivateRoute><CartPage /></PrivateRoute>} />

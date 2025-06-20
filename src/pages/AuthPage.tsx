@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Mail, Lock, User, Eye, EyeOff, Phone } from 'lucide-react';
+import { Heart, Mail, Lock, User, Eye, EyeOff, Phone, Briefcase } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const countryCodes = [
@@ -21,6 +21,8 @@ export const AuthPage: React.FC = () => {
     confirmPassword: '',
     countryCode: '+55',
     phone: '',
+    userType: 'consumer',
+    cvi: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -42,12 +44,22 @@ export const AuthPage: React.FC = () => {
         if (formData.password !== formData.confirmPassword) {
           throw new Error('As senhas não coincidem');
         }
+        if (formData.userType === 'veterinarian' && !formData.cvi) {
+          throw new Error('O número do CVI é obrigatório para veterinários.');
+        }
         if (!formData.phone) {
           setError('O telefone celular é obrigatório');
           setLoading(false);
           return;
         }
-        await signUp(formData.email, formData.password, formData.name, `${formData.countryCode} ${formData.phone}`);
+        await signUp(
+          formData.email, 
+          formData.password, 
+          formData.name, 
+          `${formData.countryCode} ${formData.phone}`,
+          formData.userType,
+          formData.cvi
+        );
         setSuccessMessage('Cadastro realizado! Por favor, confirme seu e-mail pelo link enviado.');
         setIsLogin(true);
       }
@@ -123,6 +135,47 @@ export const AuthPage: React.FC = () => {
                       onChange={handleInputChange}
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       placeholder="Digite seu nome completo"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Tipo de Usuário */}
+              {!isLogin && (
+                <div>
+                  <label htmlFor="userType" className="block text-sm font-medium text-gray-700 mb-1">
+                    Eu sou um
+                  </label>
+                  <select
+                    id="userType"
+                    name="userType"
+                    value={formData.userType}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  >
+                    <option value="consumer">Usuário Padrão</option>
+                    <option value="veterinarian">Veterinário</option>
+                  </select>
+                </div>
+              )}
+
+              {/* Campo CVI Condicional */}
+              {!isLogin && formData.userType === 'veterinarian' && (
+                <div>
+                  <label htmlFor="cvi" className="block text-sm font-medium text-gray-700 mb-1">
+                    Número do CVI (Conselho Veterinário)
+                  </label>
+                  <div className="relative">
+                    <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <input
+                      id="cvi"
+                      name="cvi"
+                      type="text"
+                      required
+                      value={formData.cvi}
+                      onChange={handleInputChange}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      placeholder="Ex: 12345"
                     />
                   </div>
                 </div>

@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
-                <span className="text-sm">1-800-PET-LOVE</span>
+                <span className="text-sm">+55 (62) 98280-8116</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4" />
@@ -67,12 +67,12 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li>
                 <a href="#" className="hover:text-primary-400 transition-colors">
-                  Help Center
+                  Centro de Ajuda
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary-400 transition-colors">
-                  Contact Us
+                  Contate-nos
                 </a>
               </li>
               <li>
