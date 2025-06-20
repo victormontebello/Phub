@@ -33,6 +33,19 @@ import {
 } from '../hooks/useProfileQueries';
 import { MESSAGES } from '../messages';
 import { PetDetailsModal } from '../components/PetDetailsModal';
+import { PetPortage } from '../models';
+import { VaccineSelectionModal } from '../components/VaccineSelectionModal';
+import Select, { StylesConfig, components, MenuListProps } from 'react-select';
+import { useBrazilianMunicipalities } from '../hooks/useLocations';
+import { FixedSizeList as List } from 'react-window';
+import { petCategories, serviceCategories } from '../data/categories';
+
+const string_vazio = '';
+
+interface LocationOption {
+  value: string;
+  label: string;
+}
 
 export const ProfilePage: React.FC = () => {
   const { user, loading } = useAuth();
@@ -41,12 +54,13 @@ export const ProfilePage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showAddPetForm, setShowAddPetForm] = useState(false);
   const [newPet, setNewPet] = useState({
-    name: '',
-    breed: '',
-    age: '',
-    description: '',
-    category: '',
-    location: '',
+    name: string_vazio,
+    breed: string_vazio,
+    age: string_vazio,
+    description: string_vazio,
+    category: string_vazio,
+    location: string_vazio,
+    portage: undefined as PetPortage | undefined,
     status: 'available',
     is_donation: true
   });
@@ -56,14 +70,14 @@ export const ProfilePage: React.FC = () => {
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAddServiceForm, setShowAddServiceForm] = useState(false);
   const [newService, setNewService] = useState({
-    title: '',
-    description: '',
-    price_from: '',
-    price_to: '',
-    category: '',
-    location: '',
+    title: string_vazio,
+    description: string_vazio,
+    price_from: string_vazio,
+    price_to: string_vazio,
+    category: string_vazio,
+    location: string_vazio,
     status: 'active',
-    availability: '',
+    availability: string_vazio,
   });
   const [serviceImageFile, setServiceImageFile] = useState<File | null>(null);
   const [showProfileImageModal, setShowProfileImageModal] = useState(false);
@@ -72,48 +86,31 @@ export const ProfilePage: React.FC = () => {
   
   // Estado local para edição do perfil
   const [editingProfileData, setEditingProfileData] = useState({
-    full_name: '',
-    phone: '',
-    location: '',
-    bio: '',
-    avatar_url: '',
+    full_name: string_vazio,
+    phone: string_vazio,
+    location: string_vazio,
+    bio: string_vazio,
+    avatar_url: string_vazio,
     user_type: 'consumer'
   });
 
-  // Lista de categorias possíveis
-  const petCategories = [
-    { value: 'dogs', label: 'Cachorro' },
-    { value: 'cats', label: 'Gato' },
-    { value: 'birds', label: 'Pássaro' },
-    { value: 'fish', label: 'Peixe' },
-    { value: 'rabbits', label: 'Coelho' },
-    { value: 'hamsters', label: 'Hamster' },
-    { value: 'other', label: 'Outro' },
-  ];
-
-  const serviceCategories = [
-    { value: 'grooming', label: 'Banho & Tosa' },
-    { value: 'veterinary', label: 'Veterinário' },
-    { value: 'training', label: 'Adestramento' },
-    { value: 'boarding', label: 'Hotelzinho' },
-    { value: 'other', label: 'Outro' },
-    { value: 'temporary', label: 'Temporário' },
-  ];
+  const [isVaccineModalOpen, setIsVaccineModalOpen] = useState(false);
+  const { data: vaccines = [] } = useVaccines();
+  const { data: municipalities, isLoading: isLoadingMunicipalities } = useBrazilianMunicipalities();
 
   // React Query hooks
   const { data: profileData = {
-    full_name: '',
-    phone: '',
-    location: '',
-    bio: '',
-    avatar_url: '',
+    full_name: string_vazio,
+    phone: string_vazio,
+    location: string_vazio,
+    bio: string_vazio,
+    avatar_url: string_vazio,
     user_type: 'consumer'
   } } = useUserProfile(user?.id);
 
   const { data: userPets = [], isLoading: isLoadingUserPets } = useUserPets(user?.id);
   const { data: userServices = [] } = useUserServices(user?.id);
   const { data: favoritesData = { pets: [], services: [] }, error: favoritesError } = userFavoritesHook(user?.id);
-  const { data: vaccines = [], isLoading: isLoadingVaccines } = useVaccines();
   if (favoritesError) alert(MESSAGES.ERROR_GENERIC);
 
   // Mutations
@@ -124,12 +121,9 @@ export const ProfilePage: React.FC = () => {
   const addServiceMutation = useAddService();
   const updateProfileImageMutation = useUpdateProfileImage();
   const removeProfileImageMutation = useRemoveProfileImage();
-
-  // Extrair dados dos favoritos
   const favoritePets = favoritesData.pets;
   const favoriteServices = favoritesData.services;
 
-  // Atualizar dados de edição quando o perfil carregar
   useEffect(() => {
     if (profileData) {
       setEditingProfileData(profileData);
@@ -144,10 +138,9 @@ export const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      // Garante que o perfil existe na tabela 'profiles'
       supabase.from('profiles').upsert({
         id: user.id,
-        full_name: user.user_metadata?.full_name || user.email || ''
+        full_name: user.user_metadata?.full_name || user.email || string_vazio
       });
     }
   }, [user]);
@@ -189,14 +182,6 @@ export const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleSelectedVaccine = (vaccineId: string) => {
-    setSelectedVaccines(prev => 
-      prev.includes(vaccineId) 
-        ? prev.filter(id => id !== vaccineId) 
-        : [...prev, vaccineId]
-    );
-  };
-
   const handlePetImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
@@ -219,25 +204,13 @@ export const ProfilePage: React.FC = () => {
       petData: {
         ...newPet,
         seller_id: user.id,
+        portage: newPet.portage || null,
       },
       imageFiles: petImageFiles,
       selectedVaccines,
     });
 
-    // Reset form
-    setShowAddPetForm(false);
-    setNewPet({
-      name: '',
-      breed: '',
-      age: '',
-      description: '',
-      category: '',
-      location: '',
-      status: 'available',
-      is_donation: true,
-    });
-    setPetImageFiles([]);
-    setSelectedVaccines([]);
+    clearPetForm();
   };
 
   const handleAddService = async (e: React.FormEvent) => {
@@ -255,19 +228,40 @@ export const ProfilePage: React.FC = () => {
       imageFile: serviceImageFile,
     });
 
+    clearServiceForm();
+  };
+
+  function clearServiceForm() {
     setShowAddServiceForm(false);
     setNewService({
-      title: '',
-      description: '',
-      price_from: '',
-      price_to: '',
-      category: '',
-      location: '',
+      title: string_vazio,
+      description: string_vazio,
+      price_from: string_vazio,
+      price_to: string_vazio,
+      category: string_vazio,
+      location: string_vazio,
       status: 'active',
-      availability: '',
+      availability: string_vazio,
     });
     setServiceImageFile(null);
-  };
+  }
+
+  function clearPetForm() {
+    setShowAddPetForm(false);
+    setNewPet({
+      name: string_vazio,
+      breed: string_vazio,
+      age: string_vazio,
+      description: string_vazio,
+      category: string_vazio,
+      location: string_vazio,
+      portage: undefined,
+      status: 'available',
+      is_donation: true,
+    });
+    setPetImageFiles([]);
+    setSelectedVaccines([]);
+  }
 
   const handleProfileImageClick = () => {
     setShowProfileImageModal(true);
@@ -314,6 +308,59 @@ export const ProfilePage: React.FC = () => {
     } catch (err) {
       alert('Erro ao remover foto de perfil!');
     }
+  };
+
+  // Função para lidar com a confirmação do modal
+  const handleVaccineConfirm = (newSelection: string[]) => {
+    setSelectedVaccines(newSelection);
+  };
+  
+  // Cria um mapa para busca rápida do nome da vacina pelo ID
+  const vaccineNameMap = new Map(vaccines.map(v => [v.id, v.name]));
+
+  // Estilos para o componente Select
+  const selectStyles: StylesConfig<LocationOption, false> = {
+    control: (base) => ({
+      ...base,
+      borderColor: '#d1d5db',
+      borderRadius: '0.375rem',
+      minHeight: '42px',
+      boxShadow: 'none',
+      '&:hover': {
+        borderColor: '#a5b4fc',
+      }
+    }),
+    input: (base) => ({
+      ...base,
+      'input:focus': {
+        boxShadow: 'none',
+      },
+    }),
+  };
+
+  // virtualization of the menu list
+  const MenuList = (props: MenuListProps<LocationOption, false>) => {
+    const itemHeight = 35;
+    const { options, children, maxHeight, getValue } = props;
+    
+    if (!children || !Array.isArray(children) || !children.length) {
+      return <components.MenuList {...props}>{children}</components.MenuList>;
+    }
+
+    const [value] = getValue();
+    const initialOffset = value ? options.indexOf(value) * itemHeight : 0;
+
+    return (
+      <List
+        width="100%"
+        height={Math.min(maxHeight, children.length * itemHeight)}
+        itemCount={children.length}
+        itemSize={itemHeight}
+        initialScrollOffset={initialOffset}
+      >
+        {({ index, style }) => <div style={style}>{children[index]}</div>}
+      </List>
+    );
   };
 
   if (loading) {
@@ -575,45 +622,62 @@ export const ProfilePage: React.FC = () => {
                         <label className="block text-sm font-medium text-gray-700">Idade</label>
                         <input type="text" value={newPet.age} onChange={(e) => setNewPet({ ...newPet, age: e.target.value })} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Categoria</label>
-                        <select value={newPet.category} onChange={(e) => setNewPet({ ...newPet, category: e.target.value })} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                          <option value="">Selecione uma categoria</option>
-                          {petCategories.map(category => (
-                            <option key={category.value} value={category.value}>{category.label}</option>
-                          ))}
+                      <div className="col-span-1">
+                        <label htmlFor="petCategory" className="block text-sm font-medium text-gray-700">Categoria</label>
+                        <select id="petCategory" name="category" value={newPet.category} onChange={(e) => setNewPet({ ...newPet, category: e.target.value })} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                          <option value="">Selecione</option>
+                          {petCategories.map(cat => <option key={cat.value} value={cat.value}>{cat.label}</option>)}
                         </select>
                       </div>
+                      <div className="col-span-1">
+                        <label htmlFor="petPortage" className="block text-sm font-medium text-gray-700">Porte (Opcional)</label>
+                        <select id="petPortage" name="portage" value={newPet.portage} onChange={(e) => setNewPet({ ...newPet, portage: e.target.value as PetPortage })} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                          <option value="">Não especificado</option>
+                          <option value="pequeno">Pequeno</option>
+                          <option value="medio">Médio</option>
+                          <option value="grande">Grande</option>
+                        </select>
+                      </div>
+                      <div className="col-span-1">
+                        <label htmlFor="petLocation" className="block text-sm font-medium text-gray-700">Localização</label>
+                        <Select
+                          id="petLocation"
+                          name="location"
+                          options={municipalities || []}
+                          isLoading={isLoadingMunicipalities}
+                          isClearable
+                          isSearchable
+                          placeholder="Selecione ou digite a cidade..."
+                          value={municipalities?.find((m) => m.value === newPet.location) || null}
+                          onChange={(option) => setNewPet({ ...newPet, location: option ? option.value : string_vazio })}
+                          noOptionsMessage={() => 'Nenhuma cidade encontrada'}
+                          loadingMessage={() => 'Carregando cidades...'}
+                          styles={selectStyles}
+                          components={{ MenuList }}
+                        />
+                      </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700">Localização</label>
-                        <input type="text" value={newPet.location} onChange={(e) => setNewPet({ ...newPet, location: e.target.value })} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
+                        <label className="block text-sm font-medium text-gray-700">Descrição</label>
+                        <textarea value={newPet.description} onChange={(e) => setNewPet({ ...newPet, description: e.target.value })} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500" rows={4} placeholder="Descrição do pet" />
                       </div>
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Vacinas</label>
-                        {isLoadingVaccines ? (
-                          <p>Carregando vacinas...</p>
-                        ) : (
-                          <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                            {vaccines.map((vaccine: any) => (
-                              <label 
-                                key={vaccine.id} 
-                                className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
-                                  selectedVaccines.includes(vaccine.id) 
-                                    ? 'bg-primary-100 border-primary-400 shadow-sm' 
-                                    : 'bg-white border-gray-200 hover:bg-gray-50'
-                                }`}
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="h-4 w-4 rounded text-primary-600 border-gray-300 focus:ring-primary-500"
-                                  checked={selectedVaccines.includes(vaccine.id)}
-                                  onChange={() => handleSelectedVaccine(vaccine.id)}
-                                />
-                                <span className="text-sm font-medium text-gray-800">{vaccine.name}</span>
-                              </label>
-                            ))}
-                          </div>
-                        )}
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Vacinas</label>
+                        <div 
+                          onClick={() => setIsVaccineModalOpen(true)}
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 min-h-[42px] cursor-pointer"
+                        >
+                          {selectedVaccines.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {selectedVaccines.map(id => (
+                                <span key={id} className="bg-primary-100 text-primary-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                                  {vaccineNameMap.get(id) || 'Carregando...'}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-gray-500">Selecione as vacinas...</span>
+                          )}
+                        </div>
                       </div>
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-2">Imagens do Pet</label>
@@ -653,10 +717,6 @@ export const ProfilePage: React.FC = () => {
                           </label>
                         </div>
                         {petImageFiles.length === 0 && <p className="text-xs text-gray-500 mt-2">Adicione pelo menos uma imagem. A primeira será a capa.</p>}
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700">Descrição</label>
-                        <textarea value={newPet.description} onChange={(e) => setNewPet({ ...newPet, description: e.target.value })} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500" rows={4} placeholder="Descrição do pet" />
                       </div>
                       <div className="md:col-span-2 flex justify-end space-x-3">
                         <button type="button" onClick={() => setShowAddPetForm(false)} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancelar</button>
@@ -1011,6 +1071,14 @@ export const ProfilePage: React.FC = () => {
             onClose={() => setSelectedPet(null)}
           />
         )}
+
+        <VaccineSelectionModal
+          isOpen={isVaccineModalOpen}
+          onClose={() => setIsVaccineModalOpen(false)}
+          onConfirm={handleVaccineConfirm}
+          vaccines={vaccines}
+          initialSelectedIds={selectedVaccines}
+        />
       </div>
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ChevronLeft, ChevronRight, MapPin, Heart, ShieldCheck, User as UserIcon, Mail, Phone } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, MapPin, Heart, ShieldCheck, User as UserIcon, Mail, Phone, Scale } from 'lucide-react';
 import { useUserProfile } from '../hooks/useProfileQueries';
 
 // Ajuste a interface Pet conforme necessário, importando-a de seu arquivo de tipos
@@ -14,6 +14,7 @@ interface Pet {
   images?: { id: string; image_url: string }[];
   vaccines?: string[];
   image_url?: string;
+  portage?: 'pequeno' | 'medio' | 'grande';
   // Adicione outros campos do pet aqui
 }
 
@@ -82,11 +83,22 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose }
           </div>
           <p className="text-lg text-gray-500 mb-4">{pet.breed}</p>
           
-          <div className="flex items-center text-gray-600 mb-6">
-            <MapPin className="h-5 w-5 mr-2" />
-            <span>{pet.location}</span>
-            <span className="mx-2">•</span>
-            <span>{pet.age}</span>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 items-center text-gray-600 mb-6">
+            <div className="flex items-center">
+              <MapPin className="h-5 w-5 mr-2" />
+              <span>{pet.location}</span>
+            </div>
+            <div className="flex items-center">
+              <span className="font-bold text-lg mr-2">•</span>
+              <span>{pet.age}</span>
+            </div>
+            {pet.portage && (
+              <div className="flex items-center">
+                <span className="font-bold text-lg mr-2">•</span>
+                <Scale className="h-5 w-5 mr-2" />
+                <span className="capitalize">{pet.portage}</span>
+              </div>
+            )}
           </div>
           
           <div className="mb-6">

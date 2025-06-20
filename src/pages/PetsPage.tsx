@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Heart, MapPin, Star, Camera, Shield, Gift } from 'lucide-react';
+import { Search, Heart, MapPin, Camera, Shield, Gift } from 'lucide-react';
 import { usePets, userFavoritesHook, addToFavoritesHook, removeFromFavoritesHook } from '../hooks/useProfileQueries';
 import { useSearchParams } from 'react-router-dom';
 import { PetDetailsModal } from '../components/PetDetailsModal';
 import { ContactCard } from '../components/ContactCard';
 import { useAuth } from '../contexts/AuthContext';
+import { petCategories as allPetCategories } from '../data/categories';
 
 export const PetsPage: React.FC = () => {
   const { user } = useAuth();
@@ -19,15 +20,9 @@ export const PetsPage: React.FC = () => {
 
   const categories = [
     { id: 'all', name: 'Todos os Pets' },
-    { id: 'dogs', name: 'Cachorros' },
-    { id: 'cats', name: 'Gatos' },
-    { id: 'birds', name: 'Pássaros' },
-    { id: 'fish', name: 'Peixes' },
-    { id: 'rabbits', name: 'Coelhos' },
-    { id: 'hamsters', name: 'Hamsters' }
+    ...allPetCategories.map(c => ({ id: c.value, name: c.label }))
   ];
 
-  // React Query hooks
   const { data: pets = [], isLoading } = usePets();
   const { data: favoritesData } = userFavoritesHook(user?.id);
   const favoriteIds = useMemo(() => favoritesData?.pets?.map(p => p.id) || [], [favoritesData]);
@@ -44,16 +39,12 @@ export const PetsPage: React.FC = () => {
 
   const handleToggleFavorite = (petId: string) => {
     if (!user) {
-      // talvez redirecionar para o login
       alert('Você precisa estar logado para favoritar pets.');
       return;
     }
+
     const isFavorite = favoriteIds.includes(petId);
-    if (isFavorite) {
-      removeFromFavoritesMutation.mutate({ itemId: petId, itemType: 'pet' });
-    } else {
-      addToFavoritesMutation.mutate({ itemId: petId, itemType: 'pet' });
-    }
+    isFavorite ? removeFromFavoritesMutation.mutate({ itemId: petId, itemType: 'pet' }) : addToFavoritesMutation.mutate({ itemId: petId, itemType: 'pet' });
   };
 
   const handleShowContact = (event: React.MouseEvent, pet: any) => {
@@ -136,13 +127,6 @@ export const PetsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Error Message */}
-          {/* {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6">
-              {error.message}
-            </div>
-          )} */}
-
           {/* Results */}
           <div className="mb-6">
             <p className="text-gray-600">
@@ -192,15 +176,14 @@ export const PetsPage: React.FC = () => {
                   </div>
 
                   <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
+                    <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-1">{pet.name}</h3>
-                        <p className="text-gray-600">{pet.breed} • {pet.age}</p>
+                        <p className="text-gray-600 text-sm">{pet.breed} • {pet.age}</p>
                       </div>
-                      {pet.profiles && pet.profiles.rating > 0 && (
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                          <span className="text-sm text-gray-600">{pet.profiles.rating.toFixed(1)}</span>
+                      {pet.portage && (
+                        <div className="bg-primary-100 text-primary-800 text-xs font-medium px-3 py-1 rounded-full capitalize">
+                          {pet.portage}
                         </div>
                       )}
                     </div>

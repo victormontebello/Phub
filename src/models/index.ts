@@ -1,5 +1,7 @@
 // Definições globais de interfaces para o projeto
 
+export type PetPortage = 'pequeno' | 'medio' | 'grande';
+
 export interface Pet {
   id: string;
   seller_id: string;
@@ -7,6 +9,7 @@ export interface Pet {
   breed: string;
   category: string;
   age: string;
+  portage?: PetPortage;
   description: string;
   image_url: string;
   location: string;
@@ -30,4 +33,4 @@ export interface Service {
   status: string;
   availability?: any;
   created_at: string;
-} 
+}

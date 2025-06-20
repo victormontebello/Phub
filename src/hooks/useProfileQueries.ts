@@ -432,9 +432,16 @@ export const useRemoveProfileImage = () => {
 export const usePets = () => {
   return useQuery({
     queryKey: ['pets'],
-    queryFn: () => {
-      const query = supabase.from('pets').select('*').eq('status', 'available');
-      return fetchPetsWithDetails(query);
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('pets')
+        .select('*, profiles(full_name, rating)')
+        .eq('status', 'available');
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
     },
   });
 };

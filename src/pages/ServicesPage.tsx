@@ -8,6 +8,7 @@ import {
   removeFromFavoritesHook
 } from '../hooks/useServicesQueries';
 import { ContactCard } from '../components/ContactCard';
+import { serviceCategories } from '../data/categories';
 
 export const ServicesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,25 +17,8 @@ export const ServicesPage: React.FC = () => {
   const [selectedProviderId, setSelectedProviderId] = useState<string | null>(null);
 
   const serviceTypes = [
-    { id: 'all', name: 'Todos os Serviços' },
-    { id: 'grooming', name: 'Cuidados de Pets' },
-    { id: 'sitting', name: 'Cuidado de Pets' },
-    { id: 'walking', name: 'Caminhada de Cães' },
-    { id: 'training', name: 'Treinamento de Pets' },
-    { id: 'veterinary', name: 'Veterinária' },
-    { id: 'boarding', name: 'Alojamento de Pets' },
-    { id: 'foster', name: 'Lar Temporário' }
-  ];
-
-  const serviceCategories = [
-    { value: 'grooming', label: 'Banho & Tosa' },
-    { value: 'veterinary', label: 'Veterinário' },
-    { value: 'training', label: 'Adestramento' },
-    { value: 'boarding', label: 'Hotelzinho' },
-    { value: 'sitting', label: 'Cuidador' },
-    { value: 'walking', label: 'Passeio' },
-    { value: 'foster', label: 'Lar Temporário' },
-    { value: 'other', label: 'Outro' },
+    { value: 'all', label: 'Todos os Serviços' },
+    ...serviceCategories
   ];
 
   const getServiceIcon = (category: string) => {
@@ -151,8 +135,8 @@ export const ServicesPage: React.FC = () => {
                 className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 {serviceTypes.map(type => (
-                  <option key={type.id} value={type.id}>
-                    {type.name}
+                  <option key={type.value} value={type.value}>
+                    {type.label}
                   </option>
                 ))}
               </select>

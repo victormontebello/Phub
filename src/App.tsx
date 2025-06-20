@@ -10,6 +10,7 @@ import { CartProvider } from './contexts/CartContext';
 import { CartPage } from './pages/CartPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { AuthCallbackPage } from './pages/AuthCallbackPage';
+import ChatWidget from './components/ChatWidget';
 
 const HomePage = lazy(() => import('./pages/HomePage').then(module => ({ default: module.HomePage })));
 const PetsPage = lazy(() => import('./pages/PetsPage').then(module => ({ default: module.PetsPage })));
@@ -67,6 +68,7 @@ function App() {
                 <Footer />
               </div>
             </Router>
+            <ChatWidget />
           </AuthProvider>
         </CartProvider>
       </QueryClientProvider>

@@ -5,8 +5,10 @@ import { Camera, X } from 'lucide-react';
 import { createService, createProduct } from '../lib/database';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../lib/supabase';
+import { PetPortage } from '../models';
 
 type ListingType = 'service' | 'product';
+type PetSize = 'pequeno' | 'medio' | 'grande';
 
 export const CreateListingPage: React.FC = () => {
   const { user } = useAuth();
@@ -33,6 +35,7 @@ export const CreateListingPage: React.FC = () => {
     price: '',
     category: '',
     stock: '',
+    portage: 'pequeno' as PetPortage,
     status: 'available' as const
   });
 
@@ -50,7 +53,14 @@ export const CreateListingPage: React.FC = () => {
     { value: 'toys', label: 'Brinquedos' },
     { value: 'accessories', label: 'Acessórios' },
     { value: 'health', label: 'Saúde' },
+    { value: 'animals', label: 'Animais' },
     { value: 'other', label: 'Outro' }
+  ];
+
+  const petPortages: { value: PetPortage; label: string }[] = [
+    { value: 'pequeno', label: 'Pequeno' },
+    { value: 'medio', label: 'Médio' },
+    { value: 'grande', label: 'Grande' },
   ];
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,8 +115,8 @@ export const CreateListingPage: React.FC = () => {
           stock: Number(productData.stock),
           seller_id: user?.id || '',
           image_url: imageUrl,
-          category: productData.category as 'food' | 'toys' | 'accessories' | 'health' | 'other',
-        });
+          portage: productData.category === 'animals' ? productData.portage : null,
+        } as any);
       }
 
       navigate('/profile');
@@ -219,167 +229,226 @@ export const CreateListingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Common Fields */}
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nome
-                </label>
-                <input
-                  type="text"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  value={listingType === 'service' ? serviceData.title : productData.name}
-                  onChange={(e) =>
-                    listingType === 'service'
-                      ? setServiceData({ ...serviceData, title: e.target.value })
-                      : setProductData({ ...productData, name: e.target.value })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Descrição
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  value={listingType === 'service' ? serviceData.description : productData.description}
-                  onChange={(e) =>
-                    listingType === 'service'
-                      ? setServiceData({ ...serviceData, description: e.target.value })
-                      : setProductData({ ...productData, description: e.target.value })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Categoria
-                </label>
-                <select
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  value={listingType === 'service' ? serviceData.category : productData.category}
-                  onChange={(e) =>
-                    listingType === 'service'
-                      ? setServiceData({ ...serviceData, category: e.target.value })
-                      : setProductData({ ...productData, category: e.target.value })
-                  }
-                >
-                  <option value="">Selecione uma categoria</option>
-                  {(listingType === 'service' ? serviceCategories : productCategories).map(
-                    (category) => (
-                      <option key={category.value} value={category.value}>
-                        {category.label}
-                      </option>
-                    )
-                  )}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Preço (De)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    R$
-                  </span>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    step="0.01"
-                    className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    value={listingType === 'service' ? serviceData.price_from : productData.price}
-                    onChange={(e) =>
-                      listingType === 'service'
-                        ? setServiceData({ ...serviceData, price_from: e.target.value })
-                        : setProductData({ ...productData, price: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
+            {/* Fields */}
+            <div className="space-y-6">
+              {/* Fields for Service */}
               {listingType === 'service' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Preço (Até)
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                      R$
-                    </span>
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nome
+                    </label>
                     <input
-                      type="number"
+                      type="text"
                       required
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      value={serviceData.price_to}
-                      onChange={(e) =>
-                        setServiceData({ ...serviceData, price_to: e.target.value })
-                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      value={serviceData.title}
+                      onChange={(e) => setServiceData({ ...serviceData, title: e.target.value })}
                     />
                   </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Descrição
+                    </label>
+                    <textarea
+                      required
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      value={serviceData.description}
+                      onChange={(e) => setServiceData({ ...serviceData, description: e.target.value })}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Categoria
+                    </label>
+                    <select
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      value={serviceData.category}
+                      onChange={(e) => setServiceData({ ...serviceData, category: e.target.value })}
+                    >
+                      <option value="">Selecione uma categoria</option>
+                      {serviceCategories.map((category) => (
+                        <option key={category.value} value={category.value}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Preço (De)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        R$
+                      </span>
+                      <input
+                        type="number"
+                        required
+                        min="0"
+                        step="0.01"
+                        className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        value={serviceData.price_from}
+                        onChange={(e) => setServiceData({ ...serviceData, price_from: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  {listingType === 'service' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Preço (Até)
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                          R$
+                        </span>
+                        <input
+                          type="number"
+                          required
+                          min="0"
+                          step="0.01"
+                          className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                          value={serviceData.price_to}
+                          onChange={(e) => setServiceData({ ...serviceData, price_to: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Service-specific fields */}
+                  {listingType === 'service' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Localização
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        value={serviceData.location}
+                        onChange={(e) => setServiceData({ ...serviceData, location: e.target.value })}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Service-specific fields */}
-              {listingType === 'service' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Localização
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    value={serviceData.location}
-                    onChange={(e) =>
-                      setServiceData({ ...serviceData, location: e.target.value })
-                    }
-                  />
-                </div>
-              )}
-
-              {/* Product-specific fields */}
+              {/* Fields for Product */}
               {listingType === 'product' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Estoque
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    value={productData.stock}
-                    onChange={(e) =>
-                      setProductData({ ...productData, stock: e.target.value })
-                    }
-                  />
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nome do Produto
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      value={productData.name}
+                      onChange={(e) => setProductData({ ...productData, name: e.target.value })}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Descrição
+                    </label>
+                    <textarea
+                      required
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      value={productData.description}
+                      onChange={(e) => setProductData({ ...productData, description: e.target.value })}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Categoria
+                    </label>
+                    <select
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      value={productData.category}
+                      onChange={(e) => setProductData({ ...productData, category: e.target.value })}
+                    >
+                      <option value="">Selecione uma categoria</option>
+                      {productCategories.map((cat) => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {productData.category === 'animals' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Porte do Animal
+                      </label>
+                      <select
+                        required
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        value={productData.portage}
+                        onChange={(e) => setProductData({ ...productData, portage: e.target.value as PetPortage })}
+                      >
+                        {petPortages.map((size) => (
+                          <option key={size.value} value={size.value}>
+                            {size.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Preço (R$)
+                      </label>
+                      <input
+                        type="number"
+                        required
+                        min="0"
+                        step="0.01"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        value={productData.price}
+                        onChange={(e) => setProductData({ ...productData, price: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Estoque
+                      </label>
+                      <input
+                        type="number"
+                        required
+                        min="0"
+                        step="1"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        value={productData.stock}
+                        onChange={(e) => setProductData({ ...productData, stock: e.target.value })}
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <button
-                type="button"
-                onClick={() => navigate('/profile')}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-              >
-                Cancelar
-              </button>
+            {/* Submit Button */}
+            <div className="pt-6 text-right">
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50"
+                className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-gray-400"
               >
-                {loading ? 'Salvando...' : 'Criar Anúncio'}
+                {loading ? 'Criando...' : 'Criar Anúncio'}
               </button>
             </div>
           </form>
