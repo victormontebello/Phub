@@ -30,10 +30,10 @@ export const HomePage: React.FC = () => {
   ];
 
   const categories = [
-    { name: 'Dogs', count: '2,500+', image: 'https://images.pexels.com/photos/1805164/pexels-photo-1805164.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-primary-500' },
-    { name: 'Cats', count: '1,800+', image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-secondary-500' },
-    { name: 'Birds', count: '650+', image: 'https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-accent-500' },
-    { name: 'Fish', count: '400+', image: 'https://images.pexels.com/photos/128756/pexels-photo-128756.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-primary-600' }
+    { name: 'Cachorros', count: '2,500+', image: 'https://images.pexels.com/photos/1805164/pexels-photo-1805164.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-primary-500' },
+    { name: 'Gatos', count: '1,800+', image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-secondary-500' },
+    { name: 'Pássaros', count: '650+', image: 'https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-accent-500' },
+    { name: 'Peixes', count: '400+', image: 'https://images.pexels.com/photos/128756/pexels-photo-128756.jpeg?auto=compress&cs=tinysrgb&w=400', color: 'bg-primary-600' }
   ];
 
   const services = [
