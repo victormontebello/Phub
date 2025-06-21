@@ -40,7 +40,7 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose }
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden"
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image Carousel */}
@@ -52,10 +52,10 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose }
           />
           {images.length > 1 && (
             <>
-              <button onClick={nextImage} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 p-2 rounded-full hover:bg-white transition">
+              <button onClick={nextImage} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 dark:bg-gray-800/70 p-2 rounded-full hover:bg-white dark:hover:bg-gray-800 transition">
                 <ChevronLeft className="h-6 w-6" />
               </button>
-              <button onClick={prevImage} className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 p-2 rounded-full hover:bg-white transition">
+              <button onClick={prevImage} className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 dark:bg-gray-800/70 p-2 rounded-full hover:bg-white dark:hover:bg-gray-800 transition">
                 <ChevronRight className="h-6 w-6" />
               </button>
             </>
@@ -68,7 +68,7 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose }
               />
             ))}
           </div>
-          <button onClick={onClose} className="absolute top-4 right-4 bg-white/70 p-2 rounded-full hover:bg-white transition">
+          <button onClick={onClose} className="absolute top-4 right-4 bg-white/70 dark:bg-gray-800/70 p-2 rounded-full hover:bg-white dark:hover:bg-gray-800 transition">
             <X className="h-6 w-6" />
           </button>
         </div>
@@ -76,14 +76,14 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose }
         {/* Pet Details */}
         <div className="w-full md:w-1/2 p-6 overflow-y-auto">
           <div className="flex justify-between items-start">
-            <h2 className="text-3xl font-bold text-gray-800">{pet.name}</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">{pet.name}</h2>
             <button className="text-gray-400 hover:text-red-500">
               <Heart className="h-7 w-7" />
             </button>
           </div>
-          <p className="text-lg text-gray-500 mb-4">{pet.breed}</p>
+          <p className="text-lg text-gray-500 dark:text-gray-400 mb-4">{pet.breed}</p>
           
-          <div className="flex flex-wrap gap-x-4 gap-y-2 items-center text-gray-600 mb-6">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 items-center text-gray-600 dark:text-gray-300 mb-6">
             <div className="flex items-center">
               <MapPin className="h-5 w-5 mr-2" />
               <span>{pet.location}</span>
@@ -102,16 +102,16 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose }
           </div>
           
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">Sobre</h3>
-            <p className="text-gray-600 whitespace-pre-wrap">{pet.description}</p>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Sobre</h3>
+            <p className="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{pet.description}</p>
           </div>
 
           {pet.vaccines && pet.vaccines.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">Vacinas</h3>
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Vacinas</h3>
               <div className="flex flex-wrap gap-2">
                 {pet.vaccines.map((vaccine, index) => (
-                  <div key={index} className="flex items-center bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                  <div key={index} className="flex items-center bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 text-sm font-medium px-3 py-1 rounded-full">
                     <ShieldCheck className="h-4 w-4 mr-1.5" />
                     {vaccine}
                   </div>
@@ -121,27 +121,27 @@ export const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose }
           )}
 
           {/* Seller Contact Info */}
-          <div className="border-t border-gray-200 mt-6 pt-6">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Informações do Vendedor</h3>
+          <div className="border-t border-gray-200 dark:border-gray-700 mt-6 pt-6">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Informações do Vendedor</h3>
             {isLoadingSeller ? (
-              <p className="text-gray-500">Carregando contato...</p>
+              <p className="text-gray-500 dark:text-gray-400">Carregando contato...</p>
             ) : sellerProfile ? (
               <div className="space-y-3">
-                <div className="flex items-center text-gray-600">
-                  <UserIcon className="h-5 w-5 mr-3 text-gray-400 flex-shrink-0" />
+                <div className="flex items-center text-gray-600 dark:text-gray-300">
+                  <UserIcon className="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span>{sellerProfile.full_name || 'Nome não informado'}</span>
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <Mail className="h-5 w-5 mr-3 text-gray-400 flex-shrink-0" />
+                <div className="flex items-center text-gray-600 dark:text-gray-300">
+                  <Mail className="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span>{sellerProfile.email || 'Email não informado'}</span>
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <Phone className="h-5 w-5 mr-3 text-gray-400 flex-shrink-0" />
+                <div className="flex items-center text-gray-600 dark:text-gray-300">
+                  <Phone className="h-5 w-5 mr-3 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                   <span>{sellerProfile.phone || 'Telefone não informado'}</span>
                 </div>
               </div>
             ) : (
-              <p className="text-red-500">Não foi possível carregar as informações do vendedor.</p>
+              <p className="text-red-500 dark:text-red-400">Não foi possível carregar as informações do vendedor.</p>
             )}
           </div>
         </div>

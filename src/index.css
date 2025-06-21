@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Classes utilitárias para tema escuro */
+@layer utilities {
+  .bg-surface {
+    @apply bg-white dark:bg-gray-800;
+  }
+  
+  .bg-surface-secondary {
+    @apply bg-gray-50 dark:bg-gray-900;
+  }
+  
+  .text-primary {
+    @apply text-gray-900 dark:text-white;
+  }
+  
+  .text-secondary {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+  
+  .border-surface {
+    @apply border-gray-200 dark:border-gray-700;
+  }
+  
+  .shadow-surface {
+    @apply shadow-lg dark:shadow-gray-900/50;
+  }
+}
+
+/* Transições suaves para mudança de tema */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}

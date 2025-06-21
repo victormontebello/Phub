@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { CreateListingPage } from './pages/CreateListingPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { CartProvider } from './contexts/CartContext';
@@ -45,32 +46,34 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <AuthProvider>
-            <Router>
-              <div className="min-h-screen bg-gray-50 text-gray-900 transition-colors">
-                <Header />
-                <main className="pt-16 px-2 sm:px-4">
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <Routes>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/pets" element={<PetsPage />} />
-                      <Route path="/services" element={<ServicesPage />} />
-                      <Route path="/products" element={<ProductsPage />} />
-                      <Route path="/auth" element={<AuthPage />} />
-                      <Route path="/auth/callback" element={<AuthCallbackPage />} />
-                      <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-                      <Route path="/create-listing" element={<PrivateRoute><CreateListingPage /></PrivateRoute>} />
-                      <Route path="/cart" element={<PrivateRoute><CartPage /></PrivateRoute>} />
-                    </Routes>
-                  </Suspense>
-                </main>
-                <Footer />
-              </div>
-            </Router>
-            <ChatWidget />
-          </AuthProvider>
-        </CartProvider>
+        <ThemeProvider>
+          <CartProvider>
+            <AuthProvider>
+              <Router>
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+                  <Header />
+                  <main className="pt-16 px-2 sm:px-4">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/pets" element={<PetsPage />} />
+                        <Route path="/services" element={<ServicesPage />} />
+                        <Route path="/products" element={<ProductsPage />} />
+                        <Route path="/auth" element={<AuthPage />} />
+                        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+                        <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+                        <Route path="/create-listing" element={<PrivateRoute><CreateListingPage /></PrivateRoute>} />
+                        <Route path="/cart" element={<PrivateRoute><CartPage /></PrivateRoute>} />
+                      </Routes>
+                    </Suspense>
+                  </main>
+                  <Footer />
+                </div>
+              </Router>
+              <ChatWidget />
+            </AuthProvider>
+          </CartProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
