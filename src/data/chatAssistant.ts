@@ -19,5 +19,9 @@ export const faqs: FAQ[] = [
   {
     question: "O que é CVI e por que preciso dele?",
     answer: "O CVI (Certificado Veterinário Internacional) é necessário para veterinários que desejam se cadastrar na plataforma. Ele comprova sua licença para exercer a profissão."
-  }
+  },
+  {
+    question: "Outras perguntas?",
+    answer:"Se você não encontrou a resposta para sua pergunta, entre em contato com o suporte através do e-mail: suporte@pethub.com.br"
+  },
 ]; 
