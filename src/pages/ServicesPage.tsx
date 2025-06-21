@@ -72,20 +72,20 @@ export const ServicesPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl shadow-sm p-6 animate-pulse">
+              <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 animate-pulse transition-colors">
                 <div className="flex items-start space-x-4">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded mb-4"></div>
-                    <div className="h-16 bg-gray-200 rounded mb-4"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                    <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
                     <div className="flex space-x-2">
-                      <div className="h-8 bg-gray-200 rounded flex-1"></div>
-                      <div className="h-8 w-12 bg-gray-200 rounded"></div>
+                      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded flex-1"></div>
+                      <div className="h-8 w-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
                     </div>
                   </div>
                 </div>
@@ -98,31 +98,31 @@ export const ServicesPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div className="px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Serviços de Pets Profissionais
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-600 dark:text-gray-300">
             Conecte-se com profissionais confiáveis em sua área
           </p>
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 mb-8 transition-colors">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Search */}
             <div>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   placeholder="Procurar por serviços ou fornecedores..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ export const ServicesPage: React.FC = () => {
               <select
                 value={selectedService}
                 onChange={(e) => setSelectedService(e.target.value)}
-                className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 {serviceTypes.map(type => (
                   <option key={type.value} value={type.value}>
@@ -146,14 +146,14 @@ export const ServicesPage: React.FC = () => {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg mb-6 transition-colors">
             {error.message}
           </div>
         )}
 
         {/* Results */}
         <div className="mb-6">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             Mostrando {services.length} serviços
           </p>
         </div>
@@ -161,16 +161,16 @@ export const ServicesPage: React.FC = () => {
         {/* Services Grid */}
         {services.length === 0 ? (
           <div className="text-center py-12">
-            <Sparkles className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum serviço encontrado</h3>
-            <p className="text-gray-500">Tente ajustar seus critérios de busca</p>
+            <Sparkles className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nenhum serviço encontrado</h3>
+            <p className="text-gray-500 dark:text-gray-400">Tente ajustar seus critérios de busca</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {services.map((service) => {
               const ServiceIcon = getServiceIcon(service.category);
               return (
-                <div key={service.id} className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+                <div key={service.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden transition-colors">
                   <div className="p-6">
                     <div className="flex items-start space-x-4">
                       {/* Provider Image/Icon */}
@@ -182,11 +182,11 @@ export const ServicesPage: React.FC = () => {
                             className="w-16 h-16 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center">
-                            <ServiceIcon className="h-8 w-8 text-primary-600" />
+                          <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-100-dark flex items-center justify-center">
+                            <ServiceIcon className="h-8 w-8 text-primary-600 dark:text-primary-500-dark" />
                           </div>
                         )}
-                        <div className="absolute -bottom-1 -right-1 bg-primary-500 p-1.5 rounded-full">
+                        <div className="absolute -bottom-1 -right-1 bg-primary-500 dark:bg-primary-500-dark p-1.5 rounded-full">
                           <ServiceIcon className="h-3 w-3 text-white" />
                         </div>
                       </div>
@@ -195,36 +195,36 @@ export const ServicesPage: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900">{service.title}</h3>
-                            <p className="text-sm text-gray-600">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{service.title}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
                               por {providerProfiles[service.provider_id]?.full_name || 'Fornecedor'}
                             </p>
                           </div>
                           <div className="text-right">
-                            <div className="text-lg font-bold text-primary-600">
+                            <div className="text-lg font-bold text-primary-600 dark:text-primary-500-dark">
                               ${service.price_from}
                               {service.price_to && service.price_to !== service.price_from && ` - $${service.price_to}`}
                             </div>
                             {providerProfiles[service.provider_id] && providerProfiles[service.provider_id].rating > 0 && (
                               <div className="flex items-center space-x-1">
                                 <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                                <span className="text-sm text-gray-600">{providerProfiles[service.provider_id].rating.toFixed(1)}</span>
-                                <span className="text-sm text-gray-400">({providerProfiles[service.provider_id].total_reviews})</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">{providerProfiles[service.provider_id].rating.toFixed(1)}</span>
+                                <span className="text-sm text-gray-400 dark:text-gray-500">({providerProfiles[service.provider_id].total_reviews})</span>
                               </div>
                             )}
                           </div>
                         </div>
 
-                        <div className="flex items-center space-x-2 text-gray-500 mb-3">
+                        <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 mb-3">
                           <MapPin className="h-4 w-4" />
                           <span className="text-sm">{service.location}</span>
                         </div>
 
-                        <p className="text-gray-700 text-sm mb-4 line-clamp-2">{service.description}</p>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-2">{service.description}</p>
 
                         {/* Category Badge */}
                         <div className="mb-4">
-                          <span className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs font-medium capitalize">
+                          <span className="bg-primary-50 dark:bg-primary-50-dark text-primary-700 dark:text-primary-300 px-3 py-1 rounded-full text-xs font-medium capitalize">
                             {serviceCategories.find(cat => cat.value === service.category)?.label || service.category}
                           </span>
                         </div>
@@ -232,19 +232,19 @@ export const ServicesPage: React.FC = () => {
                         {/* Actions */}
                         <div className="flex space-x-3">
                           <button 
-                            className="flex-1 bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors font-medium" 
+                            className="flex-1 bg-primary-500 dark:bg-primary-500-dark text-white py-2 px-4 rounded-lg hover:bg-primary-600 dark:hover:bg-primary-600-dark transition-colors font-medium" 
                             onClick={() => handleShowContact(service.provider_id)}
                           >
                             Contato Fornecedor
                           </button>
                           <button 
                             onClick={() => handleToggleFavorite(service.id)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                           >
                             <Heart className={`h-5 w-5 transition-colors ${
                               favorites.includes(service.id) 
                                 ? 'text-red-500 fill-current' 
-                                : 'text-gray-600'
+                                : 'text-gray-600 dark:text-gray-400'
                             }`} />
                           </button>
                         </div>
@@ -260,7 +260,7 @@ export const ServicesPage: React.FC = () => {
         {/* Load More */}
         {services.length > 0 && (
           <div className="text-center mt-12">
-            <button className="bg-primary-500 text-white px-8 py-3 rounded-lg hover:bg-primary-600 transition-colors font-medium">
+            <button className="bg-primary-500 dark:bg-primary-500-dark text-white px-8 py-3 rounded-lg hover:bg-primary-600 dark:hover:bg-primary-600-dark transition-colors font-medium">
               Carregar mais serviços
             </button>
           </div>

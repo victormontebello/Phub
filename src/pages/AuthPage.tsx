@@ -86,34 +86,34 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 dark:from-primary-50-dark via-white dark:via-gray-900 to-secondary-50 dark:to-secondary-50-dark flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-colors">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="bg-primary-500 p-3 rounded-xl">
+            <div className="bg-primary-500 dark:bg-primary-500-dark p-3 rounded-xl">
               <Heart className="h-8 w-8 text-white" />
             </div>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold text-gray-900 dark:text-white">
             {isLogin ? 'Bem-vindo de volta' : 'Crie sua conta'}
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
             {isLogin ? 'Faça login em sua conta PetHub' : 'Junte-se à comunidade PetHub hoje'}
           </p>
         </div>
 
         {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors">
             {error && (
-              <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+              <div className="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm transition-colors">
                 {error}
               </div>
             )}
 
             {successMessage && (
-              <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+              <div className="mb-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg text-sm transition-colors">
                 {successMessage}
               </div>
             )}
@@ -121,11 +121,11 @@ export const AuthPage: React.FC = () => {
             <div className="space-y-4">
               {!isLogin && (
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Nome Completo
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="name"
                       name="name"
@@ -133,7 +133,7 @@ export const AuthPage: React.FC = () => {
                       required={!isLogin}
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       placeholder="Digite seu nome completo"
                     />
                   </div>
@@ -143,7 +143,7 @@ export const AuthPage: React.FC = () => {
               {/* Tipo de Usuário */}
               {!isLogin && (
                 <div>
-                  <label htmlFor="userType" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="userType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Eu sou um
                   </label>
                   <select
@@ -151,7 +151,7 @@ export const AuthPage: React.FC = () => {
                     name="userType"
                     value={formData.userType}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="consumer">Usuário Padrão</option>
                     <option value="veterinarian">Veterinário</option>
@@ -162,11 +162,11 @@ export const AuthPage: React.FC = () => {
               {/* Campo CVI Condicional */}
               {!isLogin && formData.userType === 'veterinarian' && (
                 <div>
-                  <label htmlFor="cvi" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="cvi" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Número do CVI (Conselho Veterinário)
                   </label>
                   <div className="relative">
-                    <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="cvi"
                       name="cvi"
@@ -174,7 +174,7 @@ export const AuthPage: React.FC = () => {
                       required
                       value={formData.cvi}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       placeholder="Ex: 12345"
                     />
                   </div>
@@ -182,11 +182,11 @@ export const AuthPage: React.FC = () => {
               )}
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Endereço de Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                   <input
                     id="email"
                     name="email"
@@ -194,18 +194,18 @@ export const AuthPage: React.FC = () => {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     placeholder="Digite seu endereço de email"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Senha
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                   <input
                     id="password"
                     name="password"
@@ -213,13 +213,13 @@ export const AuthPage: React.FC = () => {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     placeholder="Digite sua senha"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -228,11 +228,11 @@ export const AuthPage: React.FC = () => {
 
               {!isLogin && (
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Confirmar Senha
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       id="confirmPassword"
                       name="confirmPassword"
@@ -240,7 +240,7 @@ export const AuthPage: React.FC = () => {
                       required={!isLogin}
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       placeholder="Confirme sua senha"
                     />
                   </div>
@@ -250,7 +250,7 @@ export const AuthPage: React.FC = () => {
               {/* Campo de telefone celular */}
               {!isLogin && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-2">
                     <Phone className="h-4 w-4" /> Celular
                   </label>
                   <div className="flex gap-2">
@@ -258,7 +258,7 @@ export const AuthPage: React.FC = () => {
                       name="countryCode"
                       value={formData.countryCode}
                       onChange={handleInputChange}
-                      className="w-36 px-2 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-36 px-2 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent text-gray-900 dark:text-white"
                       required
                     >
                       {countryCodes.map((c) => (
@@ -272,7 +272,7 @@ export const AuthPage: React.FC = () => {
                       onChange={handleInputChange}
                       required
                       placeholder="Número do celular"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                       maxLength={formData.countryCode === '+55' ? 15 : 20}
                     />
                   </div>
@@ -287,13 +287,13 @@ export const AuthPage: React.FC = () => {
                     id="remember-me"
                     name="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-primary-600 dark:text-primary-500-dark focus:ring-primary-500 dark:focus:ring-primary-500-dark border-gray-300 dark:border-gray-600 rounded"
                   />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                     Lembrar-me
                   </label>
                 </div>
-                <a href="#" className="text-sm text-primary-600 hover:text-primary-500">
+                <a href="#" className="text-sm text-primary-600 dark:text-primary-500-dark hover:text-primary-500 dark:hover:text-primary-400">
                   Esqueceu sua senha?
                 </a>
               </div>
@@ -302,7 +302,7 @@ export const AuthPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-6 bg-primary-500 text-white py-3 px-4 rounded-lg hover:bg-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-6 bg-primary-500 dark:bg-primary-500-dark text-white py-3 px-4 rounded-lg hover:bg-primary-600 dark:hover:bg-primary-600-dark focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-500-dark focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Aguarde...' : (isLogin ? 'Login' : 'Criar Conta')}
             </button>
@@ -310,12 +310,12 @@ export const AuthPage: React.FC = () => {
 
           {/* Toggle */}
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               {isLogin ? "Não tem uma conta?" : 'Já tem uma conta?'}
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="ml-1 text-primary-600 hover:text-primary-500 font-medium"
+                className="ml-1 text-primary-600 dark:text-primary-500-dark hover:text-primary-500 dark:hover:text-primary-400 font-medium"
               >
                 {isLogin ? 'Criar Conta' : 'Login'}
               </button>
